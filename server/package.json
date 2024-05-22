@@ -13,9 +13,12 @@
   "devDependencies": {
     "compression": "^1.7.4",
     "experss": "^0.0.1-security",
+    "mongoose": "^8.4.0",
     "morgan": "^1.10.0"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
+    "crypto": "^1.0.1",
     "express": "^4.19.2",
     "helmet": "^7.1.0",
     "save-dev": "^0.0.1-security"

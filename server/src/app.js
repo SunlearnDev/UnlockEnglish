@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const {default: helmet} = require('helmet');
 const compression = require('compression');
 
+require('./db/unlockEnglish.mongodb')
 
 // Middleware
 
@@ -18,7 +19,7 @@ app.use(compression());
 
 // Routes
 
-
+app.use('',require('./routers'));
 
 // Error handling middleware
 
