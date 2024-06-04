@@ -9,7 +9,12 @@ module.exports = withMT({
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        slideInFromLeft: 'slideInFromLeft 1s ease-in-out',
+        slideInFromRight: 'slideInFromRight 1s ease-in-out',
+      },
+    },
   },
   plugins: [],
 });

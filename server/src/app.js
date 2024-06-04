@@ -3,8 +3,13 @@ const app = express();
 const morgan = require('morgan');
 const {default: helmet} = require('helmet');
 const compression = require('compression');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const nodemailer = require('nodemailer');
+require('dotenv').config(); 
+require('./db/connect.mongodb')
 
-require('./db/unlockEnglish.mongodb')
+app.use(cors());
 
 // Middleware
 

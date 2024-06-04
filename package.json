@@ -1,0 +1,16 @@
+{
+  "name": "unlock-english-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server  && node --watch server.js",
+    "client": "cd client  && npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  }
+}

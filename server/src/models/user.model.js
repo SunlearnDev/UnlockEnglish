@@ -14,6 +14,10 @@ var UserSchema = new Schema({
         type: String,
         required: true
     },
+    username:{
+        type: String,
+        required: false
+    },
     email: {
         type: String,
         required: true
@@ -32,7 +36,7 @@ var UserSchema = new Schema({
     status:{
         type: String,
         enum:['active', 'inacative'],
-        default: 'active',
+        default: 'inacative',
     },
     address:{
         type:String,
