@@ -9,7 +9,7 @@ class AccessController {
       const newUserEl = await AccessService.signUp(req.body);
 
       if (newUserEl && newUserEl.email) {
-        const verificationLink = `http://localhost:3520/verify/${newUserEl._id}`;
+        const verificationLink = `${process.env.DEV_APP_PORT}/email/send-email/${newUserEl._id}`;
         const emailContent = `
                 <table
                   width="100%"
@@ -30,8 +30,7 @@ class AccessController {
                           border="0"
                           cellspacing="0"
                           cellpadding="0"
-                          style="padding-bottom: 20px; max-width: 516px; min-width: 220px"
-                        >
+                          style="padding-bottom: 20px; max-width: 516px; min-width: 220px">
                           <tbody>
                             <tr>
                               <td width="8" style="width: 8px"></td>
@@ -45,8 +44,7 @@ class AccessController {
                                     padding: 40px 20px;
                                   "
                                   align="center"
-                                  class="m_6566539640064596193mdv2rw"
-                                >
+                                  class="m_6566539640064596193mdv2rw">
                                   <img
                                     src="https://i.pinimg.com/originals/4f/6b/bf/4f6bbf3effc5cf63645b64c8681ae3e6.png"
                                     width="74"
@@ -88,7 +86,9 @@ class AccessController {
                                         text-align: center;
                                         margin-top: 20px;
                                         line-height: 36px;">
-                                        <a href="${verificationLink}" style="text-decoration: none; font-size:20px; color: white; background-color: #007bff; padding: 10px 20px; border-radius: 5px;">Verify Email</a>
+                                        <form action="${verificationLink}" method="post">
+                                          <button type="submit" style="text-decoration: none; font-size:20px; color: white; background-color: #007bff; padding: 10px 20px; border-radius: 5px;">Verify Email</button>
+                                        </form>
                                     </div>
                                     <br/>
                                     <p>In case you didn't initiate the creation of an Unlock English account,
@@ -123,8 +123,7 @@ class AccessController {
                                           padding-top: 12px;
                                           text-align: center;
                                         "
-                                        >ĐÀ NẴNG - VIỆT NAM </a
-                                      >
+                                        >ĐÀ NẴNG - VIỆT NAM </a>
                                     </div>
                                   </div>
                                 </div>

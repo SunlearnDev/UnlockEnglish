@@ -1,6 +1,6 @@
   "use strict";
 
-  const userEh = require("../models/user.model");
+  const userEh = require("../models/user.mysql");
   const bcrypt = require("bcrypt");
   const crypto = require("crypto");
 

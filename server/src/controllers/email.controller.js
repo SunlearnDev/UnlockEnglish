@@ -2,14 +2,20 @@
 
 const verifyEmail = require("../services/email.service");
 
-class emailController {
-    sendMail = async (req, res, next) =>{
+class Verify {
+    CheckSuccess = async (req, res, next) =>{
         try{
-            return res.status(201).json( await verifyEmail.sendMail(req.body))
+            const {userId} = req.params;
+            const result = await verifyEmail.successMail(userId);
+            if(!result){
+                return res.status(404).json()
+            }
+            const loginLink = `${CLIENT_HOST}/login`;
+            return res.status(201).json()
         }
         catch(err){
             next(err);
         }
     }
 }
-module.exports = new emailController();
+module.exports = new Verify();

@@ -9,5 +9,5 @@ router.use("/api", require('./access/register'));
 
 router.use("/api", require('./access/login'));
 
-// router.use("/api", require('./mail'));
+router.use("/api", require('./email/index'));
 module.exports = router;

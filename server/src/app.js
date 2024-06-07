@@ -5,9 +5,9 @@ const {default: helmet} = require('helmet');
 const compression = require('compression');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const nodemailer = require('nodemailer');
 require('dotenv').config(); 
 require('./db/connect.mongodb')
+require('./configs/configs.mysql')
 
 app.use(cors());
 
