@@ -6,7 +6,6 @@ const compression = require('compression');
 const cors = require('cors');
 const dotenv = require('dotenv');
 require('dotenv').config(); 
-require('./db/connect.mongodb')
 require('./configs/configs.mysql')
 
 app.use(cors());

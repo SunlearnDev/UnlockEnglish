@@ -9,7 +9,7 @@ const User = sequelize.define(
       primaryKey: true,
       allowNull: false,
     },
-    fullName: {
+    fullname: {
       type: DataTypes.STRING,
       allowNull: false,
     },

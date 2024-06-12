@@ -1,6 +1,6 @@
 // src/sync.js
 const sequelize = require('./src/configs/configs.mysql');
-const {  Token } = require('./src/models');
+const  {User, Token, ApiKey, VerifyEmail}  = require('./src/models');
 
 const syncDatabase = async () => {
   try {

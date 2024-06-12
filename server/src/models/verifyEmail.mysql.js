@@ -1,8 +1,8 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../configs/configs.mysql");
-
-const verifiedEmail = sequelize.define(
-    "verifiedEmail",
+const User = require("./user.mysql");
+const VerifyEmail = sequelize.define(
+    "VerifyEmail",
     {
         id: {
         type: DataTypes.INTEGER,
@@ -10,10 +10,13 @@ const verifiedEmail = sequelize.define(
         primaryKey: true,
         allowNull: false,
         },
-        email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
+        userId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: User, // Tên model User
+                key: 'id' // Khóa ngoại tham chiếu đến trường `id` của model User
+            }
         },
         token: {
         type: DataTypes.STRING,
@@ -26,8 +29,8 @@ const verifiedEmail = sequelize.define(
         },
     },
     {
-        tableName: "verifiedEmail",
+        tableName: "verifyEmail",
         timestamps: false,
     }
 );
-module.exports = verifiedEmail;
+module.exports = VerifyEmail;

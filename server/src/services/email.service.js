@@ -1,10 +1,10 @@
 "use strict"
-const VUser = require("../models/user.model");
+const {User} = require("../models");
 
 class Verify {
     static successMail = async (id) => {
         try {
-            const user = await VUser.findById(id).lean();
+            const user = await User.findById(id);
             if (!user) {
                 return {
                     message: "User not found",
@@ -15,7 +15,7 @@ class Verify {
                     message: "User already verified",
                 };
             }
-            const verifyUser = await VUser.findByIdAndUpdate(id, { 
+            const verifyUser = await User.findByIdAndUpdate(id, { 
                 verify: true,
                 status: "active"
             }, { new: true });

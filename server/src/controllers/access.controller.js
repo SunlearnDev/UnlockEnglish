@@ -2,15 +2,14 @@
 
 const AccessService = require("../services/access.service");
 const VerifyEmail = require("../utils/email.utils");
+const codeEmail = require("../services/codeEmail.services");
 
 class AccessController {
   signUp = async (req, res, next) => {
     try {
-      const newUserEl = await AccessService.signUp(req.body);
-
-      if (newUserEl && newUserEl.email) {
-        const verificationLink = `${process.env.DEV_APP_PORT}/email/send-email/${newUserEl._id}`;
-        const emailContent = `
+      const newUser = await AccessService.signUp(req.body);
+      const createCode = await codeEmail.Code({ userId: newUser.id });
+      const emailContent = `
                 <table
                   width="100%"
                   height="100%"
@@ -77,28 +76,37 @@ class AccessController {
                                       line-height: 20px;
                                       padding-top: 20px;
                                       text-align: left;">
-                                  <h3> Dear ${newUserEl.fullname} </h3>
-                                    Welcome to Unlock English! We're thrilled to have you embark on this journey to enhance your English language skills. To ensure your
-                                    account security and complete the registration process, we kindly request you to verify your email address.
-                                    <br /><br />You need to click this Verify email button to complete the email confirmation:<br />
+                                  <h3> Dear ${newUser.fullname} </h3>
+                                    Chào mừng bạn đến với Unlock English! Chúng tôi rất vui mừng được bạn tham gia hành trình nâng cao kỹ năng tiếng Anh của mình.
+                                    Để đảm bảo tính bảo mật cho tài khoản và hoàn tất quá trình đăng ký, vui lòng xác minh địa chỉ email của bạn.
+                                    <br /><br /> mã code xác nhận email :
+                                    vui lòng chuyển đổi sang enli<br />
                                     <div
                                       style="
                                         text-align: center;
                                         margin-top: 20px;
                                         line-height: 36px;">
-                                        <form action="${verificationLink}" method="post">
-                                          <button type="submit" style="text-decoration: none; font-size:20px; color: white; background-color: #007bff; padding: 10px 20px; border-radius: 5px;">Verify Email</button>
-                                        </form>
+                                        <p
+                                          ${createCode.token}
+                                          style="
+                                            font-size: 18px;
+                                            font-family: Arial, sans-serif;
+                                            color: #ffffff;
+                                            text-decoration: none;
+                                            background-color: #4285f4;
+                                            border-radius: 5px;
+                                            padding: 10px 24px;
+                                            display: inline-block;">
+                                            Verify Email
+                                        </p>
                                     </div>
                                     <br/>
-                                    <p>In case you didn't initiate the creation of an Unlock English account,
-                                    you can safely disregard this email. Your email address won't be added to our system,
-                                      and you won't receive any further notifications.</p>
-                                      <p>We're committed to providing you with the best possible English learning experience. If you have any questions or concerns, please don't hesitate to contact our support team.
+                                      <p> Chúng tôi cam kết cung cấp cho bạn trải nghiệm học tiếng Anh tốt nhất có thể. 
+                                      Nếu bạn có bất kỳ câu hỏi hoặc thắc mắc nào, đừng ngại liên hệ với đội ngũ hỗ trợ của chúng tôi.
                                       <br/>
                                       Sincerely,
                                       <br/></p>
-                                      <h3 tyle="font-weight: bold">The Unlock English Team</h3>
+                                      <h3 style="font-weight: bold">The Unlock English Team</h3>
                                   </div>
                                 </div>
                                 <div style="text-align: left">
@@ -121,9 +129,7 @@ class AccessController {
                                           font-size: 11px;
                                           line-height: 18px;
                                           padding-top: 12px;
-                                          text-align: center;
-                                        "
-                                        >ĐÀ NẴNG - VIỆT NAM </a>
+                                          text-align: center;"> ĐÀ NẴNG - VIỆT NAM </a>
                                     </div>
                                   </div>
                                 </div>
@@ -140,13 +146,14 @@ class AccessController {
                   </tbody>
                 </table>
                 `;
+      if (newUser) {
         await VerifyEmail.sendMail(
-          newUserEl.email,
+          newUser.email,
           "Unlock English Email Verification",
           emailContent
         );
       }
-      return res.status(201).json(newUserEl);
+      return res.status(201).json(newUser);
     } catch (err) {
       next(err);
     }
