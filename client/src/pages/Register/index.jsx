@@ -1,118 +1,196 @@
-// src/pages/Register.jsx
-import React, { useState } from "react";
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Card,
-  CardHeader,
   CardBody,
   CardFooter,
   Typography,
   Button,
   Input,
 } from "@material-tailwind/react";
-// import Input from "@/components/Input";
 import validateRegisterForm from "@/utils/validator";
 
 export default function Register() {
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [code, setcode] = useState("");
   const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({
+    fullname: false,
+    email: false,
+    password: false,
+  });
+  const [timer, setTimer] = useState(0);
+
+  useEffect(() => {
+    const validationErrors = validateRegisterForm({
+      fullname,
+      email,
+      password,
+    });
+    setErrors(validationErrors);
+  }, [fullname, email, password]);
+
+  const handleBlur = (field) => () => {
+    setTouched({
+      ...touched,
+      [field]: true,
+    });
+  };
 
   const handleRegister = async (event) => {
     event.preventDefault();
-    const validationErrors = validateRegisterForm({ fullname, email, password, confirmPassword });
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
+
+    if (Object.keys(errors).length > 0) {
       return;
     }
 
     try {
-      const res = await axios.post(`http://localhost:3520/api/register`, {
-        fullname,
-        email,
-        password,
-      });
-      if(res){
-        return window.location.href = '/login';
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/register`,
+        {
+          fullname,
+          email,
+          password,
+          code: code,
+        }
+      );
+      if (res.data.message) {
+        setErrors({ email: res.data.message, code: res.data.message});
       }
-      console.log(res.data); // Handle success response
     } catch (error) {
-      console.error(error); // Handle error response
+      if (error.response) {
+        setErrors({ email: error.response.data.message,code: error.response.data.message});
+      }
     }
-  }
+  };
+
+  const startCountdown = (duration) => {
+    setTimer(duration);
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  const handleSendCode = async (e) => {
+    e.preventDefault();
+    try {
+      const sendCode = axios.post(
+        `${import.meta.env.VITE_API_URL}/api/send-code`,
+        {
+          email,
+        }
+      );
+      if (sendCode) {
+        startCountdown(90);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const isFormFilled = fullname && email && password;
+  const isFormValid = Object.keys(errors).length === 0;
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+  };
 
   return (
     <div className="w-full h-screen flex items-center justify-center">
       <div className="mt-16 w-full lg:w-3/5 flex items-center justify-center">
         <Card className="w-96">
-          <CardHeader
-            variant="gradient"
-            color="gray"
-            className="mb-4 grid h-28 place-items-center">
-            <h3 className="text-center text-white text-2xl">Register</h3>
-          </CardHeader>
           <form onSubmit={handleRegister}>
             <CardBody className="flex flex-col gap-4">
               <Input
-                label="Full Name"
+                label="Tên của bạn"
                 size="lg"
                 type="text"
                 value={fullname}
                 onChange={(e) => setFullname(e.target.value)}
-                error={errors.fullname}
+                onBlur={handleBlur("fullname")}
+                error={touched.fullname && errors.fullname}
               />
-              {errors.fullname && (
-                    <Typography color="red">{errors.fullname}</Typography>
-                )}
+              {touched.fullname && errors.fullname && (
+                <Typography color="red">{errors.fullname}</Typography>
+              )}
               <Input
                 label="Email"
                 size="lg"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                error={errors.email}
+                onBlur={handleBlur("email")}
+                error={touched.email && errors.email}
               />
-              {errors.email && (
-                    <Typography color="red">{errors.email}</Typography>
-                )}
+              {touched.email && errors.email && (
+                <Typography color="red">{errors.email}</Typography>
+              )}
               <Input
-                label="Password"
+                label="Mật khẩu"
                 size="lg"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                error={errors.password}
+                onBlur={handleBlur("password")}
+                error={touched.password && errors.password}
               />
-              {errors.password && (
-                    <Typography color="red">{errors.password}</Typography>
-                )}
-              <Input
-                label="Confirm Password"
-                size="lg"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                error={errors.confirmPassword}
-              />
-              {errors.confirmPassword && (
-                    <Typography color="red">{errors.confirmPassword}</Typography>
-                )}
+              {touched.password && errors.password && (
+                <Typography color="red">{errors.password}</Typography>
+              )}
+              {isFormValid && (
+                <div className="relative flex w-full max-w-[24rem]">
+                  <Input
+                    type="text"
+                    label="Nhập mã xác nhận"
+                    value={code}
+                    onChange={(e) => setcode(e.target.value)}
+                    className="pr-20"
+                    disabled={!isFormFilled}
+                    containerProps={{
+                      className: "min-w-0",
+                    }}
+                  />
+                  <Button
+                    type="submit"
+                    size="sm"
+                    color={isFormFilled && timer === 0 ? "blue-gray" : "gray"}
+                    disabled={!isFormFilled || timer > 0}
+                    className="!absolute right-1 top-1 rounded"
+                    onClick={handleSendCode}
+                  >
+                    {timer > 0 ? formatTime(timer) : "Gửi mã"}
+                  </Button>
+                </div>
+              )}
             </CardBody>
             <CardFooter className="pt-0">
-              <Button type="submit" variant="gradient" fullWidth>
-                Register
+              <Button
+                disabled={!isFormValid}
+                type="submit"
+                variant="gradient"
+                fullWidth
+              >
+                Đăng ký
               </Button>
               <Typography variant="small" className="mt-6 flex justify-center">
-                Already have an account?
+                Bạn đã có tài khoản?
                 <Typography
                   as="a"
                   href="/login"
                   variant="small"
                   color="blue-gray"
-                  className="ml-1 font-bold">
-                  Login
+                  className="ml-1 font-bold"
+                >
+                  Đăng nhập
                 </Typography>
               </Typography>
             </CardFooter>

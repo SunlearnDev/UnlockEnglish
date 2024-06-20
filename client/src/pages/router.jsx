@@ -4,6 +4,7 @@ import {  Routes, Route } from 'react-router-dom';
 const Login = lazy(() => import('@/pages/Login'));
 const Register = lazy(() => import('@/pages/Register'));
 const VerifyEmail = lazy(() => import('@/pages/VerifyEmail'));
+const Home = lazy(() => import('@/pages/Home'));
 
 export const routes = [
   {
@@ -20,6 +21,11 @@ export const routes = [
     name: "VerifyEmail",
     path: "/verifyemail",
     element: <VerifyEmail/>
+  },
+  {
+    name: "Home",
+    path: "/",
+    element: <Home />
   }
 ];
 

@@ -8,7 +8,7 @@ const validateCode = ({ code }) => {
     } else if (!validator.isLength(code, { min: 6, max: 6 })) {
         errors.code = 'Code has 6 numbers.';
     } else if (!validator.isNumeric(code)) {
-        errors.code = 'The code must be number.';
+        errors.code = 'Code must be a number.';
     }
     
     return errors;

@@ -1,34 +1,51 @@
-// src/utils/validator.js
 import validator from 'validator';
 
-const validateRegisterForm = ({ fullname, email, password, confirmPassword }) => {
-  const errors = {};
+const validateRegisterForm = ({ fullname, email, password }) => {
+  let errors = {};
 
+  // Validate fullname
   if (validator.isEmpty(fullname)) {
-    errors.fullname = 'Full Name is required.';
-  } else if (!validator.isLength(fullname, { min: 5 })) {
-    errors.fullname = 'Full Name must be at least 5 characters.';
+    errors.fullname = 'Tên bạn không được để trống.';
+  } else {
+    const words = fullname.trim().split(/\s+/);
+    if (words.length < 2) {
+      errors.fullname = 'Tên bạn cần ít nhất 2 từ.';
+    } else {
+      const invalidWords = words.filter(word => word.length < 2);
+      if (invalidWords.length > 0) {
+        errors.fullname = 'Mỗi từ trong tên cần ít nhất 2 ký tự.';
+      }
+    }
   }
 
+  // Validate email
   if (validator.isEmpty(email)) {
-    errors.email = 'Email is required.';
+    errors.email = 'Email không được để trống.';
   } else if (!validator.isEmail(email)) {
-    errors.email = 'Invalid email address.';
+    errors.email = 'Email không hợp lệ.';
   }
 
+  // Validate password
   if (validator.isEmpty(password)) {
-    errors.password = 'Password is required.';
+    errors.password = 'Mật khẩu không được để trống.';
   } else if (!validator.isLength(password, { min: 8 })) {
-    errors.password = 'Password must be at least 8 characters.';
-  } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password)) {
-    errors.password = 'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.';
-  }
+    errors.password = 'Mật khẩu phải có ít nhất 8 ký tự.';
+  } else if (!validator.isStrongPassword(password)) {
+    errors.password = 'Mật khẩu không đủ mạnh. Mật khẩu cần có ít nhất 1 chữ cái viết hoa, 1 chữ cái viết thường, 1 số và 1 ký tự đặc biệt.';
+  } else if (password.toLowerCase().includes('password')) {
+    errors.password = 'Mật khẩu không được chứa từ "password".';
+  } else if (password.includes('123456')) {
+    errors.password = 'Mật khẩu không được chứa từ "123456".';
+  } 
 
-  if (validator.isEmpty(confirmPassword)) {
-    errors.confirmPassword = 'Confirm Password is required.';
-  } else if (!validator.equals(password, confirmPassword)) {
-    errors.confirmPassword = 'Passwords do not match.';
-  }
+  // Validate code
+  // if (validator.isEmpty(code)) {
+  //   errors.code = 'Mã xác nhận không được để trống.';
+  // } else if (!validator.isNumeric(code)) {
+  //   errors.code = 'Mã xác nhận chỉ chứa các ký tự số.';
+  // } else if (!validator.isLength(code, { min: 6, max: 6 })) {
+  //   errors.code = 'Mã xác nhận cần có đúng 6 ký tự.';
+  // }
 
   return errors;
 };

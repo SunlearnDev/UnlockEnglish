@@ -20,13 +20,9 @@ class VerifyEmail {
         subject: subject,
         html: htmlContent,
       };
-
       const info = await transporter.sendMail(mailOptions);
-      return {
-        message:
-          "Email đã được gửi đến hòm thư của bạn, vui lòng kiểm tra và xác thực tài khoản của bạn",
-        info,
-      };
+      return  info;
+     
     } catch (error) {
       console.error(error.message); // Hiển thị tên lỗi
       throw new Error("Không thể gửi email xác nhận");

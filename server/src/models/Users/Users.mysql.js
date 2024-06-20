@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../configs/configs.mysql");
+const sequelize = require("../../configs/configs.mysql");
+
 const User = sequelize.define(
   "User",
   {
@@ -13,7 +14,7 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    bightday: {
+    birthday: {
       type: DataTypes.DATE,
       allowNull: true,
     },
@@ -35,12 +36,16 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    salt: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
-    verifiedEmail: {
+    status: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
@@ -51,4 +56,5 @@ const User = sequelize.define(
     timestamps: false,
   }
 );
+
 module.exports = User;

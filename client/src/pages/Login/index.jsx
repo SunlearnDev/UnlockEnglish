@@ -1,62 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardHeader, CardBody, CardFooter, Typography, Input, Checkbox, Button } from "@material-tailwind/react";
 import axios from 'axios';
-const englishVocabulary = [
-  {
-    word: "Abandon",
-    pronunciation: "əˈbӕndən"
-  },
-  {
-    word: "Ability",
-    pronunciation: "əˈbiliti"
-  }
-];
+
 
 function Login() {
-  const [currentWord, setCurrentWord] = useState(englishVocabulary[0]);
-  const [animationClass, setAnimationClass] = useState('');
-  const [fontSizeClass, setFontSizeClass] = useState('text-lg');
-
-  useEffect(() => {
-    let index = 0;
-
-    const animations = ['animate-slideInFromLeft', 'animate-slideInFromRight'];
-    const fontSizes = ['text-lg', 'text-xl'];
-
-    const interval = setInterval(() => {
-      // Cập nhật từ mới
-      index = (index + 1) % englishVocabulary.length;
-      setCurrentWord(englishVocabulary[index]);
-
-      // Chọn ngẫu nhiên hiệu ứng và kích thước chữ
-      const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
-      const randomFontSize = fontSizes[Math.floor(Math.random() * fontSizes.length)];
-
-      setAnimationClass(randomAnimation);
-      setFontSizeClass(randomFontSize);
-    }, 3000); // Thay đổi từ sau mỗi 3 giây
-
-    return () => clearInterval(interval);
-  }, []);
-
   return (
-    <div className="w-full h-screen flex items-center justify-center">
-      <div className="mt-16 w-full lg:w-3/5 flex items-center justify-center">
-        <Card className="w-96">
-        <CardHeader
-            variant="gradient"
-            color="gray"
-            className="mb-4 grid h-28 place-items-center">
-            <h3 className={`ease-in-out duration-700 text-center  ${animationClass} ${fontSizeClass} text-white`}>
-                <span>
-                {currentWord.word}
-                </span>
-                <br />
-                <span>
-                {currentWord.pronunciation}
-                </span>
-            </h3>
-        </CardHeader>
+    <div className=" w-full h-full lg:h-5/6 flex items-center justify-center ">
+      <div className="w-full flex items-center justify-center">
+        <Card className="w-96 shadow-none">
+            <div className="w-full flex items-center justify-between">
+              <div className="w-full">
+              <h2 className="text-black text-2xl">Đăng nhập</h2>
+              </div>
+            </div>
           <CardBody className="flex flex-col gap-4">
             <Input label="Email" size="lg" />
             <Input label="Password" size="lg" />
@@ -66,17 +22,17 @@ function Login() {
               </div>
               <Typography variant="small" className="font-medium text-gray-900">
               <a href="#">
-                Forgot Password ?
+                Quên mật khẩu?
               </a>
             </Typography>
             </div>
           </CardBody>
           <CardFooter className="pt-0">
             <Button variant="gradient" fullWidth>
-              Sign In
+              Đăng nhập
             </Button>
             <Typography variant="small" className="mt-6 flex justify-center">
-              Don&apos;t have an account?
+              Bạn đã có tài khoảng chưa?
               <Typography
                 as="a"
                 href="/register"
@@ -84,7 +40,7 @@ function Login() {
                 color="blue-gray"
                 className="ml-1 font-bold"
               >
-                Reigster
+                Đăng ký
               </Typography>
             </Typography>
             <div className="space-y-4 mt-8">

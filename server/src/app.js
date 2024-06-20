@@ -5,6 +5,7 @@ const {default: helmet} = require('helmet');
 const compression = require('compression');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const bodyParser = require('body-parser');
 require('dotenv').config(); 
 require('./configs/configs.mysql')
 
@@ -17,7 +18,8 @@ app.use(express.urlencoded({extended: true}));
 app.use(morgan('dev'));
 app.use(helmet());
 app.use(compression());
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 // db connection
 
 
