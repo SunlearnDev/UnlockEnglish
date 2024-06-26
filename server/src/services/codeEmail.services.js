@@ -32,8 +32,7 @@ class CodeEmail {
         message: "Mã code đã được gửi đến email của bạn",
       };
     } catch (error) {
-      console.error("Lỗi khi tạo mã xác minh email:", error);
-      throw error;
+      return error;
     }
   }
 }

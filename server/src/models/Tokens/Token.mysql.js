@@ -28,6 +28,10 @@ const Token = sequelize.define(
       allowNull: false,
       unique: true,
     },
+    refreshTokensUser: {
+      type: DataTypes.JSON,
+      allowNull: true,
+    },
     refreshToken: {
       type: DataTypes.STRING,
       allowNull: true,

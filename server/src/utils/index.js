@@ -1,10 +1,8 @@
 "use strict"
-const express = require("express");
-const VerifyEmail = require("../utils/email/email.utils");
-const EmailContent = require("../utils/email/emailtemplate.utils");
-const CodeValidator = require("../utils/codeValidator.utils");
+const _ = require('lodash')
 
-module.exports = {
-    VerifyEmail,
-    EmailContent,
-};
+const getInfo = ({fileds = [], data = {}}) => {
+    return _.pick(data, fileds)
+}
+
+module.exports = getInfo
