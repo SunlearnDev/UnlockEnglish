@@ -29,5 +29,12 @@ class keyTonkenService {
       return error;
     }
   };
+
+  static findTokenId = async (userId) => {
+    return await Token.findOne({ where: { userId: userId } });
+  }
+  static removeToken = async (userId) => {
+    return await Token.destroy({ where: { userId: userId } });
+  };
 }
 module.exports = keyTonkenService;

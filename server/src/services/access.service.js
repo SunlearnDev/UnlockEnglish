@@ -7,30 +7,36 @@ const { CreatcTokenPair } = require("../auth/authUtils");
 const keyTonkenService = require("./keyTokenService.service");
 const { CodeValidator } = require("../utils/codeValidator.utils");
 const getInfo = require("../utils");
-const { BadRequest, ConflictRequestError, AuthFailure  } = require("../core/error.respone");
+const {
+  BadRequest,
+  ConflictRequestError,
+  AuthFailure,
+} = require("../core/error.respone");
 const findByEmail = require("./user.service");
 
 class AccessService {
   static async signIn({ email, password, refeshToken = null }) {
     try {
-      //TODO: Đăng nhập
       // Các bước đăng nhập
       // 1. Kiểm tra xem email có tồn tại không
       // 2. Kiểm tra xem mật khẩu có đúng không
       // 3. Tạo token cho người dùng
       // 4. Trả về thông tin người dùng và token
-    
+
       //1. Kiểm tra xem email có tồn tại không
-      const user = await findByEmail({ email, select:['id', 'email', 'password', 'salt'] });
-      if (!user) throw new AuthFailure("Email hoặc mật khẩu không đúng");
+      const user = await findByEmail({
+        email,
+        select: ["id", "email", "password", "salt"],
+      });
+      if (!user) throw AuthFailure("Email hoặc mật khẩu không đúng");
       //2. Kiểm tra xem mật khẩu có đúng không
       const match = await bcrypt.compare(password + user.salt, user.password);
-      if (!match) throw AuthFailure("Email hoặc mật khẩu không đúng");
+      if (!match) throw new AuthFailure("Email hoặc mật khẩu không đúng");
       //3. Tạo token cho người dùng
       const privateKey = crypto.randomBytes(16).toString("hex");
       const publicKey = crypto.randomBytes(16).toString("hex");
-      
-      const tokens = await  CreatcTokenPair(
+
+      const tokens = await CreatcTokenPair(
         { userId: user.id },
         publicKey,
         privateKey
@@ -47,8 +53,7 @@ class AccessService {
           user: getInfo({ fileds: ["id", "fullname", "email"], data: user }),
           tokens,
         },
-      }
-
+      };
     } catch (error) {
       throw error;
     }
@@ -61,7 +66,8 @@ class AccessService {
 
       // Xác minh mã xác nhận
       const checkCode = await CodeValidator.validateCode({ email, code });
-      if (!checkCode) throw new BadRequest("Mã xác nhận không hợp lệ hoặc đã hết hạn");
+      if (!checkCode)
+        throw new BadRequest("Mã xác nhận không hợp lệ hoặc đã hết hạn");
 
       // Tạo salt và hash mật khẩu
       const salt = await bcrypt.genSalt(10);
@@ -76,8 +82,8 @@ class AccessService {
         status: true,
       });
 
-      if (!newUser) throw BadRequest("Lỗi tạo tài khoản");
-      
+      if (!newUser) throw new BadRequest("Lỗi tạo tài khoản");
+
       // Tạo token cho người dùng mới
       const privateKey = crypto.randomBytes(16).toString("hex");
       const publicKey = crypto.randomBytes(16).toString("hex");
@@ -94,8 +100,8 @@ class AccessService {
         refreshToken: tokens.refreshToken,
       });
 
-      if (!createToken)  throw new BadRequest("Lỗi tạo token");
-   
+      if (!createToken) throw new BadRequest("Lỗi tạo token");
+
       return {
         metadata: {
           user: getInfo({ fileds: ["id", "fullname", "email"], data: newUser }),
@@ -106,6 +112,14 @@ class AccessService {
       throw error;
     }
   };
+
+  static async logout({ keyStore }) {
+    try {
+      return await keyTonkenService.removeToken(keyStore.userId);
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = AccessService;

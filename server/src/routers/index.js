@@ -5,8 +5,7 @@ const router = express.Router();
 
 
 
-router.use("/api", require('./access/index'));
-
+router.use("/api", require('./access'));
 
 router.use("/api", require('./email/index'));
 
