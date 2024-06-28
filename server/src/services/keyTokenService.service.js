@@ -31,7 +31,8 @@ class keyTonkenService {
   };
 
   static findTokenId = async (userId) => {
-    return await Token.findOne({ where: { userId: userId } });
+    const key =  await Token.findOne({ where: { userId: userId } });
+    return key;
   }
   static removeToken = async (userId) => {
     return await Token.destroy({ where: { userId: userId } });

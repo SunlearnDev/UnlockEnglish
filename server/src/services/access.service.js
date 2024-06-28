@@ -28,7 +28,7 @@ class AccessService {
         email,
         select: ["id", "email", "password", "salt"],
       });
-      if (!user) throw AuthFailure("Email hoặc mật khẩu không đúng");
+      if (!user) throw new AuthFailure("Email hoặc mật khẩu không đúng");
       //2. Kiểm tra xem mật khẩu có đúng không
       const match = await bcrypt.compare(password + user.salt, user.password);
       if (!match) throw new AuthFailure("Email hoặc mật khẩu không đúng");
@@ -41,6 +41,7 @@ class AccessService {
         publicKey,
         privateKey
       );
+      
       await keyTonkenService.createToken({
         userId: user.id,
         publicKey,
@@ -113,7 +114,7 @@ class AccessService {
     }
   };
 
-  static async logout({ keyStore }) {
+  static async logout(keyStore) {
     try {
       return await keyTonkenService.removeToken(keyStore.userId);
     } catch (error) {

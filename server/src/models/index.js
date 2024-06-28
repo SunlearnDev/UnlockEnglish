@@ -1,6 +1,7 @@
 const User = require('./Users/Users.mysql');
 const Token = require('./Tokens/Token.mysql');
 const SendCode = require('./Sendcode/SendCode.mysql')
+const ApiKey = require('./ApiKey/Apikey.mysql');
 
 // Thiết lập quan hệ sau khi các model được định nghĩa
 User.hasOne(Token, {
@@ -17,4 +18,5 @@ module.exports = {
   User,
   Token,
   SendCode,
+  ApiKey
 };

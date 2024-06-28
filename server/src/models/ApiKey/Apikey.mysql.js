@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../configs/configs.mysql");
+const sequelize = require("../../configs/configs.mysql");
 
 const ApiKey = sequelize.define(
     "ApiKey",
@@ -23,7 +23,7 @@ const ApiKey = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                isIn: [['READ', 'WRITE', 'DELETE', 'SHARE', 'UPLOAD']],
+                isIn: [['READ', 'CREATE', 'WRITE', 'DELETE', 'SHARE', 'UPLOAD']],
             },
         },
     },
